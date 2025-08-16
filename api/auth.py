@@ -31,7 +31,8 @@ async def register(user:UserProfileRegisterSchema = Depends(), db:Session=Depend
         username=user.username,
         email=user.email,
         phone_number=user.phone_number,
-        password=hash_pass
+        password=hash_pass,
+        role=user.role
     )
     db.add(db_user)
     db.commit()

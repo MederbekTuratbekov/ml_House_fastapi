@@ -8,6 +8,7 @@ from db.models import Property, UserProfile, ROLE_CHOICES
 from db.schema import PropertySchema, PropertyCreateSchema
 from config import SECRET_KEY, ALGORITHM
 
+
 property_router = APIRouter(prefix='/property', tags=['Property'])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
@@ -26,7 +27,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise HTTPException(status_code=401, detail="Недействительный токен")
 
 @property_router.post('/', response_model=PropertySchema)
-async def property_create(property: PropertyCreateSchema, user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
+async def property_create(property: PropertyCreateSchema = Depends(), user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
     if user.role != ROLE_CHOICES.seller:
         raise HTTPException(status_code=403, detail="Только продавцы могут создавать объявления")
     db_property = Property(**property.dict(), seller_id=user.id)
@@ -47,7 +48,7 @@ async def property_detail(property_id: int, db: Session = Depends(get_db)):
     return db_property
 
 @property_router.post('/{property_id}', response_model=dict)
-async def property_update(property_id: int, property: PropertyCreateSchema, user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
+async def property_update(property_id: int, property: PropertyCreateSchema = Depends(), user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
     db_property = db.query(Property).filter(Property.id == property_id).first()
     if db_property is None:
         raise HTTPException(status_code=404, detail="Объект недвижимости не найден")

@@ -34,7 +34,10 @@ class RefreshToken(Base):
     __tablename__ = 'refresh_token'
     id: Mapped[int] = mapped_column(Integer, autoincrement=True, primary_key=True)
     token: Mapped[str] = mapped_column(String, nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey('userprofile.id'), nullable=False)  # Добавлено поле user_id
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    user: Mapped['UserProfile'] = relationship('UserProfile')
 
     def __str__(self):
         return f'{self.token}'

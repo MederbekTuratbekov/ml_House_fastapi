@@ -46,9 +46,9 @@ class PropertyCreateSchema(BaseModel):
     city: CHOICE_CITY
     district: str
     address: str
-    area: Optional[int] = Field(None, ge=0, le=10000)  # Площадь не меньше 0
-    price: Optional[int] = Field(None, gt=0, le=99999999)  # Цена строго положительная
-    rooms: Optional[int] = Field(None, ge=1, le=50)  # Количество комнат не меньше 1
+    area: Optional[int] = Field(None, ge=0)
+    price: Optional[int] = Field(None, gt=0, le=99999999)
+    rooms: Optional[int] = Field(None, ge=1, le=50)
     images: Optional[str] = None
     documents: bool
 
