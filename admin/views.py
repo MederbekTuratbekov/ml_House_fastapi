@@ -4,7 +4,7 @@ from sqladmin import ModelView
 
 
 class UserProfileAdmin(ModelView, model=UserProfile):
-    column_list = [UserProfile.first_name, UserProfile.lastname]
+    column_list = [UserProfile.firstname, UserProfile.lastname]
 
 class PropertyAdmin(ModelView, model=Property):
     column_list = [Property.id, Property.property_type]

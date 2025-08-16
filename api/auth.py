@@ -26,12 +26,11 @@ async def register(user:UserProfileRegisterSchema = Depends(), db:Session=Depend
         raise HTTPException(status_code=404, detail='Почта или юзернейм уже регистрирован')
     hash_pass = get_password_hash(user.password)
     db_user = UserProfile(
-        first_name=user.first_name,
-        last_name=user.last_name,
+        firstname=user.firstname,
+        lastname=user.lastname,
         username=user.username,
         email=user.email,
         phone_number=user.phone_number,
-        profile_picture=user.profile_picture,
         password=hash_pass
     )
     db.add(db_user)
@@ -48,7 +47,7 @@ def verify_password(plain_password, hashed_password):
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode =  data.copy()
-    expire = datetime.utcnow() + (expires_delta if expires_delta else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.now(timezone.utc) + (expires_delta if expires_delta else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({'exp': expire})
     return jwt.encode( to_encode, SECRET_KEY, algorithm=ALGORITHM)
 def create_refresh_token(data: dict):
@@ -80,9 +79,13 @@ async def logout(refresh_token:str, db:Session=Depends(get_db)):
 # refresh -----------------------------------------------------------
 
 @auth_router.post('/refresh')
-async def refresh(refresh_token: str, db:Session=Depends(get_db)):
+async def refresh(refresh_token: str, db: Session = Depends(get_db)):
     stored_token = db.query(RefreshToken).filter(RefreshToken.token == refresh_token).first()
     if not stored_token:
-        raise HTTPException(status_code=401, detail="Маалымат туура эмес")
-    access_token = create_access_token({"sub":stored_token.id})
-    return {'access_token':access_token, 'token_type':'bearer'}
+        raise HTTPException(status_code=401, detail="Недействительный refresh-токен")
+    if stored_token.created_at + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS) < datetime.now(timezone.utc):
+        db.delete(stored_token)
+        db.commit()
+        raise HTTPException(status_code=401, detail="Refresh-токен истек")
+    access_token = create_access_token({"sub": stored_token.user_id})
+    return {'access_token': access_token, 'token_type': 'bearer'}

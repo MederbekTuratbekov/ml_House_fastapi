@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from typing import Optional
 from .models import ROLE_CHOICES, PROPERTY_TYPE, CHOICE_REGION, CHOICE_CITY
@@ -12,8 +12,7 @@ class UserProfileLoginSchema(BaseModel):
         from_attributes = True
 
 class UserProfileRegisterSchema(BaseModel):
-    avatar: str | None
-    first_name: str
+    firstname: str
     lastname: str
     username: str
     email: EmailStr
@@ -47,10 +46,10 @@ class PropertyCreateSchema(BaseModel):
     city: CHOICE_CITY
     district: str
     address: str
-    area: int | None
-    price: Optional[int] | None
-    rooms: Optional[int] = None
-    images:str | None
+    area: Optional[int] = Field(None, ge=0, le=10000)  # Площадь не меньше 0
+    price: Optional[int] = Field(None, gt=0, le=99999999)  # Цена строго положительная
+    rooms: Optional[int] = Field(None, ge=1, le=50)  # Количество комнат не меньше 1
+    images: Optional[str] = None
     documents: bool
 
     class Config:
@@ -86,7 +85,7 @@ class ReviewSchema(BaseModel):
 
 class ReviewCreateSchema(BaseModel):
     comment: str | None
-    rating: int | None
+    rating: Optional[int] = Field(None, ge=1, le=5)
 
     class Config:
         from_attributes = True
