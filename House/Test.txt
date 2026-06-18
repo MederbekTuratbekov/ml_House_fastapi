@@ -1,0 +1,53 @@
+{
+  "GrLivArea": 900,
+  "YearBuilt": 1950,
+  "GarageCars": 1,
+  "TotalBsmtSF": 600,
+  "FullBath": 1,
+  "OverallQual": 4,
+  "Neighborhood": "Edwards"
+}
+
+
+{
+  "GrLivArea": 1400,
+  "YearBuilt": 1975,
+  "GarageCars": 2,
+  "TotalBsmtSF": 900,
+  "FullBath": 2,
+  "OverallQual": 6,
+  "Neighborhood": "NAmes"
+}
+
+
+{
+  "GrLivArea": 1800,
+  "YearBuilt": 2005,
+  "GarageCars": 2,
+  "TotalBsmtSF": 1200,
+  "FullBath": 2,
+  "OverallQual": 7,
+  "Neighborhood": "CollgCr"
+}
+
+
+{
+  "GrLivArea": 2800,
+  "YearBuilt": 2000,
+  "GarageCars": 3,
+  "TotalBsmtSF": 1600,
+  "FullBath": 3,
+  "OverallQual": 9,
+  "Neighborhood": "NoRidge"
+}
+
+
+{
+  "GrLivArea": 1200,
+  "YearBuilt": 2010,
+  "GarageCars": 1,
+  "TotalBsmtSF": 500,
+  "FullBath": 1,
+  "OverallQual": 6,
+  "Neighborhood": "Somerst"
+}

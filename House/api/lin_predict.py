@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 import joblib
-from db.schema import HousePredictSchema
+from ..db.schema import HousePredictSchema
 from pathlib import Path
 
 
 
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(__file__).parent.parent
 
-model = joblib.load(BASE_DIR / 'model_tree.pkl')
+model = joblib.load(BASE_DIR / 'lin_model_House.pkl')
 scaler = joblib.load(BASE_DIR / 'scaler_House.pkl')
 
 
@@ -29,4 +29,4 @@ async def predict_price(house: HousePredictSchema):
     features = list(house_dict.values()) + neighborhood1_0
     scaled_data = scaler.transform([features])
     predict = model.predict(scaled_data)[0]
-    return {'Price': round(predict, 2)}
+    return {'Предполагаемая цена': round(predict, 2)}
